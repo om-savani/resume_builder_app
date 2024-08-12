@@ -15,7 +15,12 @@ class ContactInfoPage extends StatefulWidget {
 class _ContactInfoPageState extends State<ContactInfoPage> {
   int index = 0;
   bool hide = true;
-
+  String? name, phone, address, email;
+  GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  TextEditingController nameController = TextEditingController();
+  TextEditingController phoneController = TextEditingController();
+  TextEditingController addressController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
   void setIndex(int i) {
     index = i;
     setState(() {});
@@ -105,90 +110,133 @@ class _ContactInfoPageState extends State<ContactInfoPage> {
                           // color: Color(0xff009f98),
                           color: Colors.white),
                       padding: const EdgeInsets.all(12),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          TextField(
-                            textInputAction: TextInputAction.next,
-                            decoration: InputDecoration(
-                              labelText: "Name",
-                              hintText: "Enter name",
-                              prefixIcon: const Icon(Icons.person),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                            ),
-                          ),
-                          15.h,
-                          TextField(
-                            textInputAction: TextInputAction.next,
-                            keyboardType: TextInputType.phone,
-                            decoration: InputDecoration(
-                              labelText: "Contact",
-                              hintText: "Enter number",
-                              prefixIcon: const Icon(Icons.phone),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                            ),
-                          ),
-                          15.h,
-                          TextField(
-                            textInputAction: TextInputAction.next,
-                            decoration: InputDecoration(
-                              labelText: "Address",
-                              hintText: "Enter address",
-                              prefixIcon: const Icon(Icons.location_on),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                            ),
-                          ),
-                          15.h,
-                          TextField(
-                            textInputAction: TextInputAction.next,
-                            keyboardType: TextInputType.emailAddress,
-                            decoration: InputDecoration(
-                              labelText: "Email",
-                              hintText: "Enter email",
-                              prefixIcon: const Icon(Icons.email),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                            ),
-                          ),
-                          15.h,
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                      child: Form(
+                        key: formKey,
+                        child: SingleChildScrollView(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
                             children: [
-                              ElevatedButton(
-                                onPressed: () {},
-                                child: const Text(
-                                  "Submit",
-                                ),
-                                style: ButtonStyle(
-                                  backgroundColor: WidgetStateProperty.all(
-                                      Colors.greenAccent),
-                                  foregroundColor:
-                                      WidgetStateProperty.all(Colors.white),
+                              TextFormField(
+                                validator: (val) {
+                                  if (val!.isEmpty) {
+                                    return "Please enter name";
+                                  }
+                                  return null;
+                                },
+                                controller: nameController,
+                                textInputAction: TextInputAction.next,
+                                decoration: InputDecoration(
+                                  labelText: "Name",
+                                  hintText: "Enter name",
+                                  prefixIcon: const Icon(Icons.person),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
                                 ),
                               ),
-                              15.w,
-                              ElevatedButton(
-                                onPressed: () {},
-                                child: const Text(
-                                  "Reset",
+                              15.h,
+                              TextFormField(
+                                validator: (val) {
+                                  if (val!.isEmpty) {
+                                    return "Please enter phone number";
+                                  }
+                                  return null;
+                                },
+                                controller: phoneController,
+                                textInputAction: TextInputAction.next,
+                                keyboardType: TextInputType.phone,
+                                decoration: InputDecoration(
+                                  labelText: "Contact",
+                                  hintText: "Enter number",
+                                  prefixIcon: const Icon(Icons.phone),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
                                 ),
-                                style: ButtonStyle(
-                                  backgroundColor:
-                                      WidgetStateProperty.all(Colors.redAccent),
-                                  foregroundColor:
-                                      WidgetStateProperty.all(Colors.white),
+                              ),
+                              15.h,
+                              TextFormField(
+                                validator: (val) {
+                                  if (val!.isEmpty) {
+                                    return "Please enter address";
+                                  }
+                                  return null;
+                                },
+                                controller: addressController,
+                                textInputAction: TextInputAction.next,
+                                decoration: InputDecoration(
+                                  labelText: "Address",
+                                  hintText: "Enter address",
+                                  prefixIcon: const Icon(Icons.location_on),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
                                 ),
+                              ),
+                              15.h,
+                              TextFormField(
+                                validator: (val) {
+                                  if (val!.isEmpty) {
+                                    return "Please enter email";
+                                  }
+                                  return null;
+                                },
+                                controller: emailController,
+                                textInputAction: TextInputAction.next,
+                                keyboardType: TextInputType.emailAddress,
+                                decoration: InputDecoration(
+                                  labelText: "Email",
+                                  hintText: "Enter email",
+                                  prefixIcon: const Icon(Icons.email),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                ),
+                              ),
+                              15.h,
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      bool valid =
+                                          formKey.currentState!.validate();
+                                    },
+                                    style: ButtonStyle(
+                                      backgroundColor: WidgetStateProperty.all(
+                                          Colors.greenAccent),
+                                      foregroundColor:
+                                          WidgetStateProperty.all(Colors.white),
+                                    ),
+                                    child: const Text(
+                                      "Submit",
+                                    ),
+                                  ),
+                                  15.w,
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      nameController.clear();
+                                      phoneController.clear();
+                                      addressController.clear();
+                                      emailController.clear();
+                                      setState(() {});
+                                    },
+                                    style: ButtonStyle(
+                                      backgroundColor: WidgetStateProperty.all(
+                                          Colors.redAccent),
+                                      foregroundColor:
+                                          WidgetStateProperty.all(Colors.white),
+                                    ),
+                                    child: const Text(
+                                      "Reset",
+                                    ),
+                                  ),
+                                ],
                               ),
                             ],
                           ),
-                        ],
+                        ),
                       ),
                     ),
                     // Photo Page
