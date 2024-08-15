@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:resume_builder_app/routes/app_routes.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -12,9 +12,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
-        // scaffoldBackgroundColor: Color(0xff009f98).withOpacity(0.2),
+        // scaffoldBackgroundColor: Color(0xfff5f5f5),
         appBarTheme: AppBarTheme(
-          backgroundColor: Color(0xff009f98).withOpacity(0.2),
+          backgroundColor: Colors.grey.shade500,
         ),
       ),
       debugShowCheckedModeBanner: false,

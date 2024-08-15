@@ -1,9 +1,12 @@
+import 'dart:developer';
+import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:resume_builder_app/utils/extensions.dart';
 import '../../../routes/app_routes.dart';
+import '../../../utils/globals.dart';
 
 class ContactInfoPage extends StatefulWidget {
   const ContactInfoPage({super.key});
@@ -17,10 +20,7 @@ class _ContactInfoPageState extends State<ContactInfoPage> {
   bool hide = true;
   String? name, phone, address, email;
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  TextEditingController nameController = TextEditingController();
-  TextEditingController phoneController = TextEditingController();
-  TextEditingController addressController = TextEditingController();
-  TextEditingController emailController = TextEditingController();
+
   void setIndex(int i) {
     index = i;
     setState(() {});
@@ -37,7 +37,7 @@ class _ContactInfoPageState extends State<ContactInfoPage> {
           icon: Icon(CupertinoIcons.back),
         ),
         title: const Text("Contact Info"),
-        backgroundColor: Color(0xff009f98),
+        backgroundColor: Color(0xff009f98).withOpacity(0.5),
       ),
       body: Center(
         child: Column(
@@ -107,23 +107,25 @@ class _ContactInfoPageState extends State<ContactInfoPage> {
                     // Contact Page
                     Container(
                       decoration: const BoxDecoration(
-                          // color: Color(0xff009f98),
-                          color: Colors.white),
+                        color: Colors.white,
+                      ),
                       padding: const EdgeInsets.all(12),
                       child: Form(
                         key: formKey,
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
                         child: SingleChildScrollView(
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               TextFormField(
+                                onSaved: (val) => {Globals.name = val},
+                                initialValue: Globals.name,
                                 validator: (val) {
                                   if (val!.isEmpty) {
                                     return "Please enter name";
                                   }
                                   return null;
                                 },
-                                controller: nameController,
                                 textInputAction: TextInputAction.next,
                                 decoration: InputDecoration(
                                   labelText: "Name",
@@ -136,13 +138,20 @@ class _ContactInfoPageState extends State<ContactInfoPage> {
                               ),
                               15.h,
                               TextFormField(
+                                maxLength: 10,
+                                onSaved: (val) => {Globals.phone = val},
+                                initialValue: Globals.phone,
                                 validator: (val) {
                                   if (val!.isEmpty) {
                                     return "Please enter phone number";
+                                  } else if (val.length < 10) {
+                                    return "Number must be 10 digits";
                                   }
                                   return null;
                                 },
-                                controller: phoneController,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.digitsOnly
+                                ],
                                 textInputAction: TextInputAction.next,
                                 keyboardType: TextInputType.phone,
                                 decoration: InputDecoration(
@@ -156,13 +165,14 @@ class _ContactInfoPageState extends State<ContactInfoPage> {
                               ),
                               15.h,
                               TextFormField(
+                                onSaved: (val) => {Globals.address = val},
+                                initialValue: Globals.address,
                                 validator: (val) {
                                   if (val!.isEmpty) {
                                     return "Please enter address";
                                   }
                                   return null;
                                 },
-                                controller: addressController,
                                 textInputAction: TextInputAction.next,
                                 decoration: InputDecoration(
                                   labelText: "Address",
@@ -175,13 +185,14 @@ class _ContactInfoPageState extends State<ContactInfoPage> {
                               ),
                               15.h,
                               TextFormField(
+                                onSaved: (val) => {Globals.email = val},
+                                initialValue: Globals.email,
                                 validator: (val) {
                                   if (val!.isEmpty) {
                                     return "Please enter email";
                                   }
                                   return null;
                                 },
-                                controller: emailController,
                                 textInputAction: TextInputAction.next,
                                 keyboardType: TextInputType.emailAddress,
                                 decoration: InputDecoration(
@@ -202,35 +213,56 @@ class _ContactInfoPageState extends State<ContactInfoPage> {
                                     onPressed: () {
                                       bool valid =
                                           formKey.currentState!.validate();
+                                      if (valid) {
+                                        formKey.currentState!.save();
+
+                                        SnackBar snackBar = const SnackBar(
+                                          content: Text(
+                                              "Form saved successfully... !!"),
+                                          backgroundColor: Colors.green,
+                                          behavior: SnackBarBehavior.floating,
+                                        );
+
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(snackBar);
+                                      } else {
+                                        SnackBar snackBar = const SnackBar(
+                                          content:
+                                              Text("Something went wrong...!!"),
+                                          backgroundColor: Colors.red,
+                                          behavior: SnackBarBehavior.floating,
+                                        );
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(snackBar);
+                                      }
                                     },
                                     style: ButtonStyle(
-                                      backgroundColor: WidgetStateProperty.all(
-                                          Colors.greenAccent),
+                                      backgroundColor:
+                                          MaterialStateProperty.all(
+                                              Colors.greenAccent),
                                       foregroundColor:
-                                          WidgetStateProperty.all(Colors.white),
+                                          MaterialStateProperty.all(
+                                              Colors.white),
                                     ),
-                                    child: const Text(
-                                      "Submit",
-                                    ),
+                                    child: const Text("Save"),
                                   ),
                                   15.w,
                                   ElevatedButton(
                                     onPressed: () {
-                                      nameController.clear();
-                                      phoneController.clear();
-                                      addressController.clear();
-                                      emailController.clear();
+                                      formKey.currentState!.reset();
+                                      Globals.name = Globals.phone = Globals
+                                          .address = Globals.email = null;
                                       setState(() {});
                                     },
                                     style: ButtonStyle(
-                                      backgroundColor: WidgetStateProperty.all(
-                                          Colors.redAccent),
+                                      backgroundColor:
+                                          MaterialStateProperty.all(
+                                              Colors.redAccent),
                                       foregroundColor:
-                                          WidgetStateProperty.all(Colors.white),
+                                          MaterialStateProperty.all(
+                                              Colors.white),
                                     ),
-                                    child: const Text(
-                                      "Reset",
-                                    ),
+                                    child: const Text("Reset"),
                                   ),
                                 ],
                               ),
@@ -244,8 +276,37 @@ class _ContactInfoPageState extends State<ContactInfoPage> {
                       decoration: const BoxDecoration(
                         color: Colors.white,
                       ),
-                      child: const Column(
-                        mainAxisSize: MainAxisSize.min,
+                      alignment: Alignment.center,
+                      width: double.infinity,
+                      height: MediaQuery.of(context).size.height * 0.3,
+                      child: Stack(
+                        alignment: Alignment.bottomRight,
+                        children: [
+                          CircleAvatar(
+                            foregroundImage: Globals.image != null
+                                ? FileImage(Globals.image!)
+                                : null,
+                            child: Text("Add Photo"),
+                            radius: 70,
+                            backgroundColor: Colors.grey.shade300,
+                          ),
+                          FloatingActionButton.small(
+                            onPressed: () async {
+                              ImagePicker picker = ImagePicker();
+                              XFile? file = await picker.pickImage(
+                                source: ImageSource.camera,
+                              );
+                              if (file != null) {
+                                log("FILE GOT !!");
+                                Globals.image = File(file.path);
+                                setState(() {});
+                              } else {
+                                log("FAILED !!");
+                              }
+                            },
+                            child: Icon(Icons.add),
+                          ),
+                        ],
                       ),
                     ),
                   ],

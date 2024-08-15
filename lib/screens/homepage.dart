@@ -63,20 +63,11 @@ class _HomePageState extends State<HomePage> {
                             height: 100,
                             width: 200,
                             decoration: BoxDecoration(
-                              boxShadow: [
-                                BoxShadow(
-                                  color:
-                                      const Color(0xff009f98).withOpacity(0.5),
-                                  spreadRadius: 2,
-                                  blurRadius: 7,
-                                  offset: const Offset(
-                                      2, 2), // changes position of shadow
-                                )
-                              ],
-                              color: const Color(0xff009f98).withOpacity(0.3),
+                              color: Colors.transparent,
                               borderRadius: const BorderRadius.all(
                                 Radius.circular(16),
                               ),
+                              border: Border.all(color: Colors.grey, width: 2),
                             ),
 
                             child: Expanded(
