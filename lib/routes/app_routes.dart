@@ -7,7 +7,7 @@ import 'package:resume_builder_app/screens/buider_options_pages/education/educat
 import 'package:resume_builder_app/screens/buider_options_pages/experiences/experiences_page.dart';
 import 'package:resume_builder_app/screens/buider_options_pages/interest/interest_page.dart';
 import 'package:resume_builder_app/screens/buider_options_pages/personal_detail/personal_detail_page.dart';
-import 'package:resume_builder_app/screens/buider_options_pages/projects/project_page.dart';
+import 'package:resume_builder_app/screens/buider_options_pages/projects_page/project_page.dart';
 import 'package:resume_builder_app/screens/buider_options_pages/references/references_page.dart';
 import 'package:resume_builder_app/screens/buider_options_pages/technical_skills/technical_skill_page.dart';
 import 'package:resume_builder_app/screens/splashscreen.dart';

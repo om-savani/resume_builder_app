@@ -1,5 +1,5 @@
-import 'dart:developer';
 import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -34,10 +34,9 @@ class _ContactInfoPageState extends State<ContactInfoPage> {
           onPressed: () {
             Navigator.of(context).pushReplacementNamed(AppRoutes.homePage);
           },
-          icon: Icon(CupertinoIcons.back),
+          icon: const Icon(CupertinoIcons.back),
         ),
         title: const Text("Contact Info"),
-        backgroundColor: Color(0xff009f98).withOpacity(0.5),
       ),
       body: Center(
         child: Column(
@@ -237,12 +236,10 @@ class _ContactInfoPageState extends State<ContactInfoPage> {
                                       }
                                     },
                                     style: ButtonStyle(
-                                      backgroundColor:
-                                          MaterialStateProperty.all(
-                                              Colors.greenAccent),
+                                      backgroundColor: WidgetStateProperty.all(
+                                          Colors.greenAccent),
                                       foregroundColor:
-                                          MaterialStateProperty.all(
-                                              Colors.white),
+                                          WidgetStateProperty.all(Colors.white),
                                     ),
                                     child: const Text("Save"),
                                   ),
@@ -255,12 +252,10 @@ class _ContactInfoPageState extends State<ContactInfoPage> {
                                       setState(() {});
                                     },
                                     style: ButtonStyle(
-                                      backgroundColor:
-                                          MaterialStateProperty.all(
-                                              Colors.redAccent),
+                                      backgroundColor: WidgetStateProperty.all(
+                                          Colors.redAccent),
                                       foregroundColor:
-                                          MaterialStateProperty.all(
-                                              Colors.white),
+                                          WidgetStateProperty.all(Colors.white),
                                     ),
                                     child: const Text("Reset"),
                                   ),
@@ -286,25 +281,55 @@ class _ContactInfoPageState extends State<ContactInfoPage> {
                             foregroundImage: Globals.image != null
                                 ? FileImage(Globals.image!)
                                 : null,
-                            child: Text("Add Photo"),
+                            child: const Text("Add Photo"),
                             radius: 70,
                             backgroundColor: Colors.grey.shade300,
                           ),
                           FloatingActionButton.small(
                             onPressed: () async {
-                              ImagePicker picker = ImagePicker();
-                              XFile? file = await picker.pickImage(
-                                source: ImageSource.camera,
+                              final ImagePicker imagePicker = ImagePicker();
+                              final source = await showDialog<ImageSource>(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: const Text("Choose Image Source"),
+                                    actions: <Widget>[
+                                      ElevatedButton(
+                                        child: const Icon(
+                                          CupertinoIcons.camera,
+                                          size: 30,
+                                        ),
+                                        onPressed: () {
+                                          Navigator.of(context)
+                                              .pop(ImageSource.camera);
+                                        },
+                                      ),
+                                      ElevatedButton(
+                                        child: const Icon(
+                                          CupertinoIcons.photo,
+                                          size: 30,
+                                        ),
+                                        onPressed: () {
+                                          Navigator.of(context)
+                                              .pop(ImageSource.gallery);
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                },
                               );
-                              if (file != null) {
-                                log("FILE GOT !!");
-                                Globals.image = File(file.path);
-                                setState(() {});
-                              } else {
-                                log("FAILED !!");
+
+                              if (source != null) {
+                                final XFile? file =
+                                    await imagePicker.pickImage(source: source);
+                                if (file != null) {
+                                  setState(() {
+                                    Globals.image = File(file.path);
+                                  });
+                                }
                               }
                             },
-                            child: Icon(Icons.add),
+                            child: const Icon(Icons.add),
                           ),
                         ],
                       ),

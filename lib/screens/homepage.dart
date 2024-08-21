@@ -63,7 +63,7 @@ class _HomePageState extends State<HomePage> {
                             height: 100,
                             width: 200,
                             decoration: BoxDecoration(
-                              color: Colors.transparent,
+                              color: const Color(0xff6b9080).withOpacity(0.8),
                               borderRadius: const BorderRadius.all(
                                 Radius.circular(16),
                               ),
@@ -75,10 +75,15 @@ class _HomePageState extends State<HomePage> {
                                 children: [
                                   Image.asset(
                                     e['icon'],
+                                    color: const Color(0xffeaf4f4),
                                     height: 50,
                                   ),
                                   const Spacer(),
-                                  Text(e['title']),
+                                  Text(
+                                    e['title'],
+                                    style: const TextStyle(
+                                        color: Color(0xffeaf4f4)),
+                                  ),
                                 ],
                               ),
                             ),
